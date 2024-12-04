@@ -186,47 +186,44 @@ async def run_tests():
         # Test 4: Bulk index Airbnb listings
         total_tests += 1
         bulk_index_data = {
-            "collection_name": "listingAndReviews",
+            "collection_name": "listingsAndReviews",
             "aggregation_pipeline": [
-                {
-                    "$project": {
-                        "_id": 1,
-                        "content": {
-                            "$concat": [
-                                {"$ifNull": ["$name", ""]}, " - ",
-                                {"$ifNull": ["$summary", ""]}, " ",
-                                {"$ifNull": ["$description", ""]}, " ",
-                                {"$ifNull": ["$neighborhood_overview", ""]}, " ",
-                                {"$ifNull": [{"$reduce": {
-                                    "input": "$amenities",
-                                    "initialValue": "",
-                                    "in": {"$concat": ["$$value", " ", "$$this"]}
-                                }}, ""]}
-                            ]
-                        },
-                        "metadata": {
-                            "name": "$name",
-                            "property_type": "$property_type",
-                            "room_type": "$room_type",
-                            "neighborhood": "$address.suburb",
-                            "price": {"$ifNull": ["$price", 0]},
-                            "amenities": "$amenities",
-                            "bedrooms": {"$ifNull": ["$bedrooms", 0]},
-                            "bathrooms": {"$ifNull": ["$bathrooms", 0]},
-                            "max_guests": "$accommodates",
-                            "host": {
-                                "name": "$host.host_name",
-                                "is_superhost": "$host.host_is_superhost"
-                            },
-                            "review_scores": "$review_scores"
-                        }
-                    }
-                }
+                                        {
+                                "$project": {
+                                    "_id": 1,
+                                    "content": {
+                                        "$concat": [
+                                            "$name", " - ",
+                                            {"$ifNull": ["$summary", ""]}, " ",
+                                            {"$ifNull": ["$description", ""]}, " ",
+                                            {"$ifNull": ["$neighborhood_overview", ""]}
+                                        ]
+                                    },
+                                    "metadata": {
+                                        "name": "$name",
+                                        "property_type": "$property_type",
+                                        "room_type": "$room_type",
+                                        "neighborhood": "$address.suburb",
+                                        "price": {"$ifNull": ["$price", 0]},
+                                        "amenities": "$amenities",
+                                        "bedrooms": {"$ifNull": ["$bedrooms", 0]},
+                                        "bathrooms": {"$ifNull": ["$bathrooms", 0]},
+                                        "max_guests": "$accommodates",
+                                        "host": {
+                                            "name": "$host.host_name",
+                                            "is_superhost": "$host.host_is_superhost"
+                                        },
+                                        "review_scores": "$review_scores"
+                                    }
+                                }
+                            },{
+                                "$limit": 100
+                            }
             ],
             "id_field": "_id",
             "content_field": "content",
             "metadata_fields": ["metadata"],
-            "batch_size": 10
+            "batch_size": 100
         }
         success, response = await test_endpoint(
             client, "POST", "/bulk-index",

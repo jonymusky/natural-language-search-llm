@@ -37,6 +37,7 @@ class Document(BaseModel):
 
     class Config:
         arbitrary_types_allowed = True
+        extra = 'allow'
         json_encoders = {
             ObjectId: str
         }
@@ -46,7 +47,7 @@ class SearchQuery(BaseModel):
     text: str
     provider: Optional[str] = None
     max_results: Optional[int] = 10
-    filters: Optional[Dict[str, Any]] = Field(default_factory=dict)
+    filters: Optional[Dict[str, Any]] = Field(default_factory=dict)    
 
 class BulkIndexConfig(BaseModel):
     """Configuration for bulk indexing from MongoDB"""
@@ -56,4 +57,3 @@ class BulkIndexConfig(BaseModel):
     content_field: str
     metadata_fields: Optional[List[str]] = Field(default_factory=list)
     batch_size: Optional[int] = 1000
- 
