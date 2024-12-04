@@ -1,0 +1,41 @@
+app:
+  host: ${APP_HOST}
+  port: ${APP_PORT}
+  debug: ${DEBUG}
+
+vector_db:
+  type: qdrant
+  host: ${QDRANT_HOST}
+  port: ${QDRANT_PORT}
+  collection_name: ${QDRANT_COLLECTION}
+  vector_size: 384
+
+mongodb:
+  uri: ${MONGODB_URI}
+  database: ${MONGODB_DB}
+  collection: ${MONGODB_COLLECTION}
+
+providers:
+  openai:
+    enabled: true
+    api_key: ${OPENAI_API_KEY}
+    model: ${OPENAI_MODEL}
+    embedding_model: ${OPENAI_EMBEDDING_MODEL}
+  
+  ollama:
+    enabled: true
+    url: ${OLLAMA_URL}
+    model: ${OLLAMA_MODEL}
+    embedding_model: ${OLLAMA_EMBEDDING_MODEL}
+    vector_size: 384
+  
+  gemini:
+    enabled: true
+    api_key: ${GEMINI_API_KEY}
+    model: ${GEMINI_MODEL}
+    vector_size: 768
+
+search:
+  default_provider: ${DEFAULT_PROVIDER}
+  max_results: 10
+  similarity_threshold: 0.3
