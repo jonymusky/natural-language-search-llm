@@ -240,17 +240,24 @@ class IndexingService:
         for doc in batch:
             await self.vector_db.add_document(doc)
 
-    async def update_document(self, document_id: str, document: Document) -> bool:
+    async def update_document(self, document: Document) -> bool:
         """Update an existing document"""
-        logger.info(f"Updating document {document_id}")
-        provider = get_provider(self.default_provider, self.config["providers"])
+        try:
+            logger.info(f"Updating document {document.id}")
+            provider = get_provider(self.default_provider, self.config["providers"])
 
-        if not document.embedding:
-            document.embedding = await provider.generate_embedding(document.content)
+            # Generate new embedding if not provided
+            if not document.embedding:
+                document.embedding = await provider.generate_embedding(document.content)
+                logger.debug(f"Generated new embedding for document {document.id}")
 
-        await self.vector_db.update_document(document)
-        logger.debug(f"Successfully updated document {document_id}")
-        return True
+            # Update document in vector DB
+            await self.vector_db.update_document(document)
+            logger.debug(f"Successfully updated document {document.id}")
+            return True
+        except Exception as e:
+            logger.error(f"Error updating document {document.id}: {str(e)}")
+            raise
 
     async def delete_document(self, document_id: str) -> bool:
         """Delete a document from the database"""

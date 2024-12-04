@@ -17,6 +17,11 @@ class IndexRequest(BaseModel):
     content: str
     metadata: Optional[Dict[str, Any]] = None
 
+class UpdateRequest(BaseModel):
+    """Request model for document updates"""
+    content: str
+    metadata: Optional[Dict[str, Any]] = None
+
 class IndexResponse(BaseModel):
     """Response model for index endpoint"""
     success: bool
