@@ -96,6 +96,51 @@ Response:
 }
 ```
 
+### Delete Document
+
+Delete a document by its ID:
+
+```bash
+curl -X DELETE "http://localhost:8000/documents/{document_id}" \
+  -H "Content-Type: application/json"
+```
+
+Response:
+```json
+{
+  "success": true
+}
+```
+
+### Update Document
+
+Update an existing document:
+
+```bash
+curl -X PUT "http://localhost:8000/documents/{document_id}" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "content": "Updated document content that will be re-embedded and searchable.",
+    "metadata": {
+      "category": "documentation",
+      "author": "Jane Doe",
+      "last_updated": "2024-03-04"
+    }
+  }'
+```
+
+Response:
+```json
+{
+  "success": true
+}
+```
+
+Note: When updating a document, the system will:
+1. Generate new embeddings for the updated content
+2. Replace the old document's embeddings and metadata
+3. Maintain the same document ID
+
 ## Natural Language Query Examples
 
 Here are some example queries that demonstrate the semantic search capabilities:

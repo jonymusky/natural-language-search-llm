@@ -13,7 +13,8 @@ from .models.api import (
     IndexRequest,
     IndexResponse,
     BulkIndexRequest,
-    BulkIndexResponse
+    BulkIndexResponse,
+    UpdateRequest
 )
 
 # Configure logging
@@ -106,4 +107,32 @@ async def bulk_index(request: BulkIndexRequest):
         return BulkIndexResponse(**result)
     except Exception as e:
         logger.error(f"Bulk indexing failed: {str(e)}")
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.delete("/documents/{document_id}", response_model=IndexResponse)
+async def delete_document(document_id: str):
+    """Delete a document by ID"""
+    try:
+        success = await indexing_service.delete_document(document_id)
+        return IndexResponse(success=success)
+    except Exception as e:
+        logger.error(f"Document deletion failed: {str(e)}")
+        raise HTTPException(status_code=400, detail=str(e))
+
+@app.put("/documents/{document_id}", response_model=IndexResponse)
+async def update_document(document_id: str, request: UpdateRequest):
+    """Update an existing document"""
+    try:
+        # Create document with path parameter ID and request body content
+        document = Document(
+            id=document_id,
+            content=request.content,
+            metadata=request.metadata or {}
+        )
+        
+        # Update document
+        success = await indexing_service.update_document(document)
+        return IndexResponse(success=success)
+    except Exception as e:
+        logger.error(f"Document update failed: {str(e)}")
         raise HTTPException(status_code=400, detail=str(e)) 
