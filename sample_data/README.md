@@ -2,8 +2,8 @@
 
 ### 1. Import the data
 ```bash
-mongoimport --uri "mongodb://mongo:<password>@localhost:27017/b2b3?replicaSet=rs0&authSource=admin" \
-  --db b2b3 \
+mongoimport --uri "mongodb://mongo:<password>@localhost:27017/natural-lenguage-search-llm?replicaSet=rs0&authSource=admin" \
+  --db natural-lenguage-search-llm \
   --collection listingsAndReviews \
   --file listingsAndReviews.json
 ```
@@ -11,7 +11,7 @@ mongoimport --uri "mongodb://mongo:<password>@localhost:27017/b2b3?replicaSet=rs
 ### 2. Start the service
 check at the readme how to start the service
 
-### 3. Execute the tests
+### 3. Execute the tests (root folder)
 ```bash
 python test_endpoints.py
 ```
