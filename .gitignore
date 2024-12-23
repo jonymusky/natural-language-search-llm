@@ -42,7 +42,7 @@ env/
 *.sqlite3
 
 # Vector DB data
-vector_db/
+# vector_db/
 
 # MongoDB
 data/db/
